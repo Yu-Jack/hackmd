@@ -137,6 +137,13 @@ app.use(i18n.init)
 // static files
 app.use('/', express.static(path.join(__dirname, '/public'), { maxAge: config.staticcachetime }))
 
+// board
+// @TODO this is for dev
+app.use(require('./board/dev-server'))
+// @TODO add prod version of board
+// app.use('/board', express.static(path.join(__dirname, '/board/dist'), { maxAge: config.staticcachetime }))
+
+
 // session
 app.use(session({
   name: config.sessionname,
@@ -183,8 +190,12 @@ app.engine('ejs', ejs.renderFile)
 app.set('view engine', 'ejs')
 
 app.use(require('./lib/web/baseRouter'))
-app.use(require('./lib/web/statusRouter'))
 app.use(require('./lib/web/auth'))
+
+// block not login user
+app.use(require('./lib/web/middleware/isAuthenticated'))
+
+app.use(require('./lib/web/statusRouter'))
 app.use(require('./lib/web/historyRouter'))
 app.use(require('./lib/web/userRouter'))
 app.use(require('./lib/web/imageRouter'))

@@ -15,6 +15,7 @@
     "doctoc": "doctoc --title='# Table of Contents' README.md"
   },
   "dependencies": {
+    "@sendgrid/mail": "^6.2.1",
     "Idle.Js": "git+https://github.com/shawnmclean/Idle.js",
     "async": "^2.1.4",
     "aws-sdk": "^2.7.20",
@@ -75,8 +76,8 @@
     "markdown-it-sup": "^1.0.0",
     "markdown-pdf": "^7.0.0",
     "mathjax": "~2.7.0",
-    "mermaid": "~7.1.0",
     "mattermost": "^3.4.0",
+    "mermaid": "~7.1.0",
     "meta-marked": "^0.4.2",
     "method-override": "^2.3.7",
     "minimist": "^1.2.0",
@@ -95,8 +96,8 @@
     "passport-ldapauth": "^0.6.0",
     "passport-local": "^1.0.0",
     "passport-oauth2": "^1.4.0",
-    "passport-twitter": "^1.0.4",
     "passport-saml": "^0.31.0",
+    "passport-twitter": "^1.0.4",
     "passport.socketio": "^3.7.0",
     "pdfobject": "^2.0.201604172",
     "pg": "^6.1.2",

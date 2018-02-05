@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TapMD email 驗證</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+    <style>
+        form {
+            margin: 30px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container text-center">
+        <h1>TapMD email 驗證</h1>
+        <form class="form-inline" method="post">
+            <div class="form-group">
+                <label for="code">驗證碼</label>
+                <input type="text" class="form-control" id="code" name="code" placeholder="123456">
+            </div>
+            <button type="submit" class="btn btn-default">送出</button>
+        </form>
+        <% if (errorMessage && errorMessage.length > 0) { %>
+        <div class="alert alert-danger" style="max-width: 400px; margin: 0 auto;"><%= errorMessage %></div>
+        <% } %>
+    </div>
+</body>
+
+</html>
