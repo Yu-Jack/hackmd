@@ -5,7 +5,8 @@ module.exports = {
     baseUrl: process.env.BASE_URL || 'http://localhost:3000/board/'
   },
   router: {
-    base: '/board/'
+    base: '/board/',
+    middleware: 'initApp'
   },
   /*
   ** Headers of the page
