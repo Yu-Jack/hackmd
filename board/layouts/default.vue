@@ -2,7 +2,7 @@
   <v-app>
     <v-navigation-drawer clipped v-model="drawer" fixed app>
       <v-toolbar flat v-if="paths.length">
-        <v-btn icon @click="backToParentFolder()" nuxt :to="paths.length === 1 ? '/' : `/note/${paths[paths.length - 1].id}`">
+        <v-btn icon @click="backToParentFolder()" nuxt :to="paths.length === 1 ? '/' : `/note/${paths[paths.length - 2].id}`">
           <v-icon>navigate_before</v-icon>
         </v-btn>
         <v-toolbar-title>{{ paths[paths.length - 1].name }}</v-toolbar-title>
