@@ -1,11 +1,20 @@
 <template>
   <v-app>
+    <notifications group="info" />
     <v-navigation-drawer clipped v-model="drawer" fixed app>
-      <v-toolbar flat v-if="paths.length">
-        <v-btn icon @click="backToParentFolder()" nuxt :to="paths.length === 1 ? '/' : `/note/${paths[paths.length - 2].id}`">
-          <v-icon>navigate_before</v-icon>
-        </v-btn>
-        <v-toolbar-title>{{ paths[paths.length - 1].name }}</v-toolbar-title>
+      <v-toolbar flat>
+        <!-- show back button and note name -->
+        <template v-if="paths.length">
+          <v-btn icon @click="backToParentFolder()" nuxt :to="paths.length === 1 ? '/' : `/note/${paths[paths.length - 2].id}`">
+            <v-icon>navigate_before</v-icon>
+          </v-btn>
+          <v-toolbar-title>{{ paths[paths.length - 1].name }}</v-toolbar-title>
+        </template>
+        <!-- show hello -->
+        <v-toolbar-title v-else>Notes</v-toolbar-title>
+
+        <v-spacer></v-spacer>
+        <AddNoteDialog />
       </v-toolbar>
 
       <v-divider></v-divider>
@@ -31,14 +40,14 @@
 
       <!-- 右側按鈕放這裡 -->
 
-      <!--
-      <v-btn
+      
+      <!-- <v-btn
         icon
-        @click.stop="rightDrawer = !rightDrawer"
+        @click="addNote"
       >
         <v-icon>menu</v-icon>
-      </v-btn>
-      -->
+      </v-btn> -->
+     
     </v-toolbar>
     <v-content>
       <v-container fill-height>
@@ -50,6 +59,7 @@
 
 <script>
   import { mapState, mapActions } from 'vuex'
+  import AddNoteDialog from '~/components/AddNoteDialog'
   export default {
     data () {
       return {
@@ -65,10 +75,16 @@
       ])
     },
     methods: {
+      addNote () {
+        this.$store.commit('add_note_dialog', true)
+      },
       ...mapActions([
         'goChildFolder',
         'backToParentFolder'
       ])
+    },
+    components: {
+      AddNoteDialog
     }
   }
 </script>

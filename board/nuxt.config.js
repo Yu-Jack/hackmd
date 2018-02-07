@@ -25,7 +25,8 @@ module.exports = {
   },
   plugins: [
     '~/plugins/vuetify.js',
-    '~/plugins/axios.js'
+    '~/plugins/axios.js',
+    '~/plugins/vue-notification.js'
   ],
   css: [
     '~/assets/style/app.styl'

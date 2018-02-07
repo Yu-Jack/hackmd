@@ -3,7 +3,8 @@ export const state = () => ({
   sidebar: false,
   boards: [],
   root_notes: [],
-  paths: []
+  paths: [],
+  add_note_dialog: false
 })
 
 export const mutations = {
@@ -24,6 +25,12 @@ export const mutations = {
   },
   pop_path (state) {
     state.paths.pop()
+  },
+  add_note_dialog (state, payload) {
+    state.add_note_dialog = payload
+  },
+  current_folder (state, payload) {
+    state.current_folder = payload
   }
 }
 
@@ -77,5 +84,23 @@ export const actions = {
       throw new Error(500)
     }
     commit('boards', data.boards)
+  },
+
+  async linkNote ({ state, commit, dispatch }, payload) {
+    const postData = {
+      board_id: state.boards[0].id,
+      parent_id: state.paths.length ? state.paths[state.paths.length - 1].id : '',
+      name: payload.name,
+      short_id: payload.short_id
+    }
+    const result = await this.$axios.$post('/remark/link-note', postData)
+    if (result.status !== 0) {
+      throw new Error(500)
+    }
+    if (state.paths.length) {
+      await dispatch('fetchSubNotes', state.paths[state.paths.length - 1])
+    } else {
+      await dispatch('fetchRootNotes', state.boards[0].id)
+    }
   }
 }

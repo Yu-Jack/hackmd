@@ -70,9 +70,9 @@ if (config.usessl) {
 }
 
 // logger
-app.use(morgan('combined', {
-  'stream': logger
-}))
+// app.use(morgan('combined', {
+//   'stream': logger
+// }))
 
 // socket io
 var io = require('socket.io')(server)
@@ -200,8 +200,9 @@ app.use(require('./lib/web/historyRouter'))
 app.use(require('./lib/web/userRouter'))
 app.use(require('./lib/web/imageRouter'))
 app.use(require('./lib/web/noteRouter'))
+app.use(require('./lib/web/proxyRouter'))
 
-app.use('/remark', require('./lib/web/fakeRouter'))
+// app.use('/remark', require('./lib/web/fakeRouter'))
 
 // response not found if no any route matxches
 app.get('*', function (req, res) {
