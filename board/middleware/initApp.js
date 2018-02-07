@@ -1,5 +1,9 @@
-export default async function ({ store }) {
+export default async function ({ store, error }) {
   if (!store.state.initialized) {
-    await store.dispatch('initApp')
+    try {
+      await store.dispatch('initApp')
+    } catch (err) {
+      error(err)
+    }
   }
 }

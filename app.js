@@ -201,6 +201,8 @@ app.use(require('./lib/web/userRouter'))
 app.use(require('./lib/web/imageRouter'))
 app.use(require('./lib/web/noteRouter'))
 
+app.use('/remark', require('./lib/web/fakeRouter'))
+
 // response not found if no any route matxches
 app.get('*', function (req, res) {
   response.errorNotFound(res)

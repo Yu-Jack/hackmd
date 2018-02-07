@@ -56,32 +56,7 @@ export const actions = {
   },
 
   async fetchRootNotes ({ commit }, boardId) {
-    const data = await mock({
-      'status': 0,
-      'msg': 'String',
-      'root-notes': [
-        {
-          'id': 1,
-          'name': 'Main Server',
-          type: 'folder'
-        },
-        {
-          'id': 2,
-          'name': 'Portal',
-          type: 'folder'
-        },
-        {
-          id: 3,
-          name: 'TapPay Remark',
-          type: 'file'
-        },
-        {
-          id: 4,
-          name: 'Portal 新報價調整',
-          type: 'file'
-        }
-      ]
-    })
+    const data = await this.$axios.$post('/remark/get-root-notes', { id: boardId })
     if (data.status !== 0) {
       throw new Error(500)
     }
@@ -89,23 +64,7 @@ export const actions = {
   },
 
   async fetchSubNotes ({ commit }, folder) {
-    const data = await mock({
-      'status': 0,
-      'msg': 'String',
-      'sub-notes': [
-        {
-          'id': 1,
-          'name': '新官網',
-          type: 'file'
-        },
-        {
-          'id': 2,
-          'name': '新 Portal',
-          type: 'file'
-        }
-      ]
-
-    })
+    const data = await this.$axios.$post('/remark/get-sub-notes', { id: folder.id })
     if (data.status !== 0) {
       throw new Error(500)
     }
@@ -113,27 +72,10 @@ export const actions = {
   },
 
   async fetchBoards ({ commit }) {
-    const data = await mock({
-      'status': 0,
-      'msg': 'String',
-      'boards': [
-        {
-          'id': 1,
-          name: 'Tappay Engineer'
-        }
-      ]
-    })
+    const data = await this.$axios.$post('/remark/get-board-list', { name: 'tappay' })
     if (data.status !== 0) {
       throw new Error(500)
     }
     commit('boards', data.boards)
   }
-}
-
-function mock (data) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(data)
-    }, 300)
-  })
 }
