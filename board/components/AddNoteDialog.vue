@@ -29,6 +29,11 @@
                     :rules="short_id_rules"
                   ></v-text-field>
                 </v-flex>
+                <v-flex xs12>
+                  <v-alert type="error" :value="error_message">
+                    {{ error_message }}
+                  </v-alert>
+                </v-flex>
               </v-layout>
             </v-container>
           </v-card-text>
@@ -47,6 +52,7 @@
 export default {
   data () {
     return {
+      error_message: null,
       is_loading: false,
       note_name: '',
       short_id: '',
@@ -87,6 +93,7 @@ export default {
     reset () {
       this.note_name = ''
       this.short_id = ''
+      this.error_message = ''
     },
     async save () {
       if (this.$refs.form.validate()) {
@@ -98,18 +105,15 @@ export default {
           })
           this.$notify({
             group: 'info',
-            title: 'Important message',
-            text: 'Hello user! This is a notification!'
+            title: '新增成功'
+            // text: 'Hello user! This is a notification!'
           })
+          this.is_loading = false
           this.close()
         } catch (error) {
-          this.$notify({
-            group: 'info',
-            title: '失敗了',
-            text: 'Hello user! This is a notification!'
-          })
+          this.error_message = error.message
+          this.is_loading = false
         }
-        this.is_loading = false
       }
     },
     close () {
