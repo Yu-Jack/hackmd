@@ -22,11 +22,9 @@
                 <v-flex xs12>
                   <v-text-field
                     v-model="short_id"
-                    label="Short ID"
+                    label="(Optional) 用 Short ID 匯入"
                     hint="如果網址是：https://tapmd.tappaysdk.com/s/BJljRSHIz，則填入「BJljRSHIz」。"
-                    required
                     persistent-hint
-                    :rules="short_id_rules"
                   ></v-text-field>
                 </v-flex>
                 <v-flex xs12>
@@ -59,9 +57,6 @@ export default {
       valid: false,
       note_name_rules: [
         v => !!v || '請填入 Note 名稱'
-      ],
-      short_id_rules: [
-        v => !!v || '請填入 Short ID'
       ]
     }
   },
@@ -99,7 +94,7 @@ export default {
       if (this.$refs.form.validate()) {
         this.is_loading = true
         try {
-          await this.$store.dispatch('linkNote', {
+          await this.$store.dispatch('addNote', {
             name: this.note_name,
             short_id: this.short_id
           })

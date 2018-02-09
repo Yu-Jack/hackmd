@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <notifications group="info" />
+    <notifications group="error" />
     <v-navigation-drawer clipped v-model="drawer" fixed app>
       <v-toolbar flat>
         <!-- show back button and note name -->
@@ -15,6 +16,7 @@
 
         <v-spacer></v-spacer>
         <AddNoteDialog />
+        <DeleteNoteDialog />
       </v-toolbar>
 
       <v-divider></v-divider>
@@ -74,6 +76,7 @@
 <script>
   import { mapState, mapActions } from 'vuex'
   import AddNoteDialog from '~/components/AddNoteDialog'
+  import DeleteNoteDialog from '~/components/DeleteNoteDialog'
   import ImportNoteDialog from '~/components/ImportNoteDialog'
   export default {
     data () {
@@ -92,7 +95,18 @@
         'paths'
       ])
     },
+    watch: {
+      $route (route) {
+        if (route.name === 'index') {
+          this.$store.dispatch('backToRootFolder')
+        }
+      }
+    },
     methods: {
+      test ($event) {
+        $event.stopPropagation()
+        console.log('test')
+      },
       addNote () {
         this.$store.commit('add_note_dialog', true)
       },
@@ -103,7 +117,8 @@
     },
     components: {
       AddNoteDialog,
-      ImportNoteDialog
+      ImportNoteDialog,
+      DeleteNoteDialog
     }
   }
 </script>

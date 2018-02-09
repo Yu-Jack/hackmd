@@ -20,6 +20,9 @@ export const mutations = {
   root_notes (state, payload) {
     state.root_notes = payload
   },
+  paths (state, payload) {
+    state.paths = payload
+  },
   push_path (state, payload) {
     state.paths.push(payload)
   },
@@ -45,6 +48,11 @@ export const actions = {
     commit('initApp')
   },
 
+  async backToRootFolder ({ state, commit, dispatch }) {
+    await dispatch('fetchRootNotes', state.boards[0].id)
+    commit('paths', [])
+  },
+
   async backToParentFolder ({ state, commit, dispatch }) {
     if (state.paths.length === 1) {
       await dispatch('fetchRootNotes', state.boards[0].id)
@@ -60,6 +68,7 @@ export const actions = {
   async goChildFolder ({ state, commit, dispatch }, folder) {
     await dispatch('fetchSubNotes', folder)
     commit('push_path', folder)
+    this.$router.push(`/note/${folder.id}`)
   },
 
   async fetchRootNotes ({ commit }, boardId) {
@@ -86,6 +95,14 @@ export const actions = {
     commit('boards', data.boards)
   },
 
+  async addNote ({ dispatch }, payload) {
+    if (payload.short_id) {
+      await dispatch('linkNote', payload)
+    } else {
+      await dispatch('createAndLinkNote', payload)
+    }
+  },
+
   async linkNote ({ state, commit, dispatch }, payload) {
     const postData = {
       board_id: state.boards[0].id,
@@ -102,5 +119,32 @@ export const actions = {
     } else {
       await dispatch('fetchRootNotes', state.boards[0].id)
     }
+  },
+
+  async createAndLinkNote ({ state, commit, dispatch }, payload) {
+    const postData = {
+      board_id: state.boards[0].id,
+      parent_id: state.paths.length ? state.paths[state.paths.length - 1].id : '',
+      name: payload.name
+    }
+    await this.$axios.$post('/new-in-board', postData)
+
+    if (state.paths.length) {
+      await dispatch('fetchSubNotes', state.paths[state.paths.length - 1])
+    } else {
+      await dispatch('fetchRootNotes', state.boards[0].id)
+    }
+  },
+
+  async unlinkNote ({ state, commit, dispatch }) {
+    const postData = {
+      board_id: state.boards[0].id,
+      id: state.paths[state.paths.length - 1].id
+    }
+    const result = await this.$axios.$post('/remark/unlink-note', postData)
+    if (result.status !== 0) {
+      throw new Error(result.msg)
+    }
+    dispatch('backToParentFolder')
   }
 }
