@@ -16,7 +16,7 @@
 
         <v-spacer></v-spacer>
         <AddNoteDialog />
-        <DeleteNoteDialog />
+        <DeleteNoteDialog v-show="$store.state.paths.length" />
       </v-toolbar>
 
       <v-divider></v-divider>
