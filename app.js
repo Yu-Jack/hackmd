@@ -139,10 +139,18 @@ app.use('/', express.static(path.join(__dirname, '/public'), { maxAge: config.st
 
 // board
 // @TODO this is for dev
-app.use(require('./board/dev-server'))
-// @TODO add prod version of board
-// app.use('/board', express.static(path.join(__dirname, '/board/dist'), { maxAge: config.staticcachetime }))
-
+if (config.debug) {
+  // dev server
+  app.use(require('./board/dev-server'))
+} else {
+  // SPA
+  app.use('/board', express.static(path.join(__dirname, '/board/dist'), {
+    maxAge: config.staticcachetime
+  }))
+  app.use('/board', (req, res) => {
+    res.sendFile(path.join(__dirname, '/board/dist/index.html'))
+  })
+}
 
 // session
 app.use(session({
