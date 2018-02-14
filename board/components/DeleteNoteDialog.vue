@@ -26,6 +26,8 @@ export default {
       try {
         await this.$store.dispatch('unlinkNote')
         this.dialog = false
+        const paths = this.$store.state.paths
+        this.$router.push(paths.length === 1 ? '/' : `/note/${paths[paths.length - 2].id}`)
       } catch (error) {
         this.$notify({
           group: 'error',

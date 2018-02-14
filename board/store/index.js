@@ -23,12 +23,6 @@ export const mutations = {
   paths (state, payload) {
     state.paths = payload
   },
-  push_path (state, payload) {
-    state.paths.push(payload)
-  },
-  pop_path (state) {
-    state.paths.pop()
-  },
   add_note_dialog (state, payload) {
     state.add_note_dialog = payload
   },
@@ -38,12 +32,16 @@ export const mutations = {
 }
 
 export const actions = {
-  async initApp ({ state, commit, dispatch }) {
+  async initApp ({ state, commit, dispatch }, noteId) {
     // 1. /remark/get-board-list
     await dispatch('fetchBoards')
 
-    // 2. /remark/get-root-notes from root_notes[0]
-    await dispatch('fetchRootNotes', state.boards[0].id)
+    if (noteId) {
+      await dispatch('fetchSubNotes', { id: noteId })
+    } else {
+      // 2. /remark/get-root-notes from root_notes[0]
+      await dispatch('fetchRootNotes', state.boards[0].id)
+    }
 
     commit('initApp')
   },
@@ -53,22 +51,19 @@ export const actions = {
     commit('paths', [])
   },
 
-  async backToParentFolder ({ state, commit, dispatch }) {
-    if (state.paths.length === 1) {
-      await dispatch('fetchRootNotes', state.boards[0].id)
-      commit('pop_path')
-    } else {
-      // fetch sub notes
-      const parent = state.paths[state.paths.length - 2]
-      await dispatch('fetchSubNotes', parent)
-      commit('pop_path')
-    }
+  async updateSubnotes ({ state, commit, dispatch }, note) {
+    await dispatch('fetchParentNotes', note)
+    await dispatch('fetchSubNotes', note)
   },
 
-  async goChildFolder ({ state, commit, dispatch }, folder) {
-    await dispatch('fetchSubNotes', folder)
-    commit('push_path', folder)
-    this.$router.push(`/note/${folder.id}`)
+  async backToParentFolder ({ state, commit, dispatch }) {
+    if (state.paths.length === 0) {
+      await dispatch('backToRootFolder')
+    } else {
+      // fetch sub notes
+      const parent = state.paths[state.paths.length - 1]
+      await dispatch('fetchSubNotes', parent)
+    }
   },
 
   async fetchRootNotes ({ commit }, boardId) {
@@ -85,6 +80,19 @@ export const actions = {
       throw new Error(data.msg)
     }
     commit('root_notes', data['sub-notes'])
+  },
+
+  async fetchParentNotes ({ state, commit }, note) {
+    const data = await this.$axios.$post('/remark/get-parent-notes', {
+      board_id: state.boards[0].id,
+      id: note.id
+    })
+    if (data.status !== 0) {
+      throw new Error(data.msg)
+    }
+    const parentNotes = data['parent-notes'].reverse()
+    parentNotes.push(note)
+    commit('paths', parentNotes)
   },
 
   async fetchBoards ({ commit }) {
@@ -145,6 +153,5 @@ export const actions = {
     if (result.status !== 0) {
       throw new Error(result.msg)
     }
-    dispatch('backToParentFolder')
   }
 }

@@ -6,7 +6,7 @@
       <v-toolbar flat>
         <!-- show back button and note name -->
         <template v-if="paths.length">
-          <v-btn icon @click="backToParentFolder()" nuxt :to="paths.length === 1 ? '/' : `/note/${paths[paths.length - 2].id}`">
+          <v-btn icon nuxt :to="paths.length === 1 ? '/' : `/note/${paths[paths.length - 2].id}`">
             <v-icon>navigate_before</v-icon>
           </v-btn>
           <v-toolbar-title>{{ paths[paths.length - 1].name }}</v-toolbar-title>
@@ -22,7 +22,7 @@
       <v-divider></v-divider>
 
       <v-list two-line subheader>
-        <v-list-tile avatar v-for="item in root_notes" :key="item.id" @click="goChildFolder(item)" nuxt :to="`/note/${item.id}`">
+        <v-list-tile avatar v-for="item in root_notes" :key="item.id" nuxt :to="`/note/${item.id}`">
           <v-list-tile-avatar>
             <v-icon>mdi-file-document-box</v-icon>
           </v-list-tile-avatar>
@@ -40,6 +40,17 @@
         <img src="~/static/landing.png" style="width: auto; height: 40px;">
       </nuxt-link>
       <v-toolbar-title>{{ boards[0].name }}</v-toolbar-title>
+
+      <v-breadcrumbs divider="/" large>
+        <v-breadcrumbs-item
+          v-for="item in paths"
+          :key="item.id"
+          nuxt
+          :to="`/note/${item.id}`"
+        >
+          {{ item.name }}
+        </v-breadcrumbs-item>
+      </v-breadcrumbs>
       
       <v-spacer></v-spacer>
 
@@ -111,8 +122,6 @@
         this.$store.commit('add_note_dialog', true)
       },
       ...mapActions([
-        'goChildFolder',
-        'backToParentFolder'
       ])
     },
     components: {

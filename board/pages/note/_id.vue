@@ -10,6 +10,7 @@
 export default {
   async asyncData ({ params, app }) {
     const note = await app.$axios.$post('/remark/get-note', { id: params.id })
+    await app.store.dispatch('updateSubnotes', note)
     return {
       note: note
     }
