@@ -15,6 +15,7 @@
         <v-toolbar-title v-else>Notes</v-toolbar-title>
 
         <v-spacer></v-spacer>
+        <EditNoteDialog />
         <AddNoteDialog />
         <DeleteNoteDialog v-show="$store.state.paths.length" />
       </v-toolbar>
@@ -86,6 +87,7 @@
 
 <script>
   import { mapState, mapActions } from 'vuex'
+  import EditNoteDialog from '~/components/EditNoteDialog'
   import AddNoteDialog from '~/components/AddNoteDialog'
   import DeleteNoteDialog from '~/components/DeleteNoteDialog'
   import ImportNoteDialog from '~/components/ImportNoteDialog'
@@ -127,7 +129,8 @@
     components: {
       AddNoteDialog,
       ImportNoteDialog,
-      DeleteNoteDialog
+      DeleteNoteDialog,
+      EditNoteDialog
     }
   }
 </script>

@@ -14,6 +14,11 @@ export default {
     return {
       note: note
     }
+  },
+  head () {
+    return {
+      title: this.note.name
+    }
   }
 }
 </script>

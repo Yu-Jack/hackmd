@@ -4,7 +4,9 @@ export const state = () => ({
   boards: [],
   root_notes: [],
   paths: [],
-  add_note_dialog: false
+  add_note_dialog: false,
+  edit_note_dialog: false,
+  current_note: {}
 })
 
 export const mutations = {
@@ -26,8 +28,14 @@ export const mutations = {
   add_note_dialog (state, payload) {
     state.add_note_dialog = payload
   },
+  edit_note_dialog (state, payload) {
+    state.edit_note_dialog = payload
+  },
   current_folder (state, payload) {
     state.current_folder = payload
+  },
+  current_note (state, payload) {
+    state.current_note = payload
   }
 }
 
@@ -54,6 +62,7 @@ export const actions = {
   async updateSubnotes ({ state, commit, dispatch }, note) {
     await dispatch('fetchParentNotes', note)
     await dispatch('fetchSubNotes', note)
+    commit('current_note', note)
   },
 
   async backToParentFolder ({ state, commit, dispatch }) {
@@ -109,6 +118,15 @@ export const actions = {
     } else {
       await dispatch('createAndLinkNote', payload)
     }
+  },
+
+  async editNote({ dispatch, state }, payload) {
+    const result = await this.$axios.$post('/remark/edit-note', payload)
+    if (result.status !== 0) {
+      throw new Error(result.msg)
+    }
+    const note = await this.$axios.$post('/remark/get-note', { id: payload.id })
+    dispatch('updateSubnotes', note)
   },
 
   async linkNote ({ state, commit, dispatch }, payload) {
